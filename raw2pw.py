@@ -5,7 +5,6 @@ import glob as gl
 import time
 import multiprocessing as mp
 BOHR = 0.529177249    # Bohr constant in Angstrom
-#TAU  = 4.8378e-5  # tau_PW constant in ps
 TAU  = 0.5*4.8378e-5  # tau_CP constant in ps
 HARTREE = 27.211386245988 #eV
 eV=1.60217662 #10^-19 J
@@ -97,8 +96,8 @@ def gen_folder(outdir,istep,inputf,prefix,pos,box,typedic,types):
      if(len(gl.glob(outdirit)) == 0): run(["mkdir", "-p", outdirit+'/'])
      
      write_pws(inputf+'.scf',  outdirit+'/'+prefix+'.scf', pos[istep,:]*1./BOHR,box[istep,[0,4,8]]*1./BOHR,typedic , types )
-     write_pws(inputf+'.nscf', outdirit+'/'+prefix+'.nscf',pos[istep,:]*1./BOHR,box[istep,[0,4,8]]*1./BOHR,typedic , types )
-     write_wanin(inputf+'.win',outdirit+'/'+prefix+'.win', pos[istep,:]*1./BOHR,box[istep,[0,4,8]]*1./BOHR,typedic , types  )
+#     write_pws(inputf+'.nscf', outdirit+'/'+prefix+'.nscf',pos[istep,:]*1./BOHR,box[istep,[0,4,8]]*1./BOHR,typedic , types )
+#     write_wanin(inputf+'.win',outdirit+'/'+prefix+'.win', pos[istep,:]*1./BOHR,box[istep,[0,4,8]]*1./BOHR,typedic , types  )
      return
 
 if( __name__ == "__main__"):

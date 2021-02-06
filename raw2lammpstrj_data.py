@@ -7,7 +7,6 @@ from subprocess import check_output
 import re
 
 BOHR = 0.529177249    # Bohr constant in Angstrom
-#TAU  = 4.8378e-5  # tau_PW constant in ps
 TAU  = 0.5*4.8378e-5  # tau_CP constant in ps
 HARTREE = 27.211386245988 #eV
 eV=1.60217662 #10^-19 J
