@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=20
+#SBATCH --cpus-per-task=2
+#SBATCH --time=11:59:00
+#SBATCH --account=cmalosso
+#SBATCH --partition=regular2
+#SBATCH --job-name=
+#SBATCH --mail-user=cmalosso@sissa.it
+#SBATCH --mail-type=ALL
+
+. /home/dtisi/analisi/build-remote/env.sh
+cd ${SLURM_SUBMIT_DIR}
+echo $SLURM_SUBMIT_DIR
+export OMP_NUM_THREADS=2
+time mpirun -np 20 /home/dtisi/analisi/build-remote/analisi -i abinitio400_dump.7dt.out  --binary-convert abinitio400_dump.7dt.bin 
