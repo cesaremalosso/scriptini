@@ -71,6 +71,7 @@ def read_write_dat(infile,outdir='./',step=-1):
                  if(line == '' or (step == dt and step >0)):
                      end=False
 
+    np.savetxt(outdir + 'type.raw',snap['type'].reshape((1,-1)),fmt='% 4d')
     return
 
 
