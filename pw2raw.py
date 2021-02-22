@@ -42,13 +42,13 @@ def read_pw(infile,logfile='log.log'):
        if(leng>2 and ll[2]=='atoms/cell'):   # number of atoms/cell
           nat=int(ll[4])
        elif(leng>3 and ll[0]=='!'):   # 
-          print('energy')
+          #print('energy')
           energy= float(ll[4])
        elif (leng>3 and ll[0]=='celldm(1)=' ):
-          print('box')
+          #print('box')
           box = np.diag(np.ones(3)*float(ll[1])).reshape(9)
        elif (leng>3 and ll[0]=='site' and ll[3]=='positions'):
-          print(ll)
+          #print(ll)
           atom = np.zeros((nat,3))
           for i in range(nat):
              ll=inf.readline().split()
@@ -58,7 +58,7 @@ def read_pw(infile,logfile='log.log'):
              atom[iatom,2] = float(ll[8])
           
        elif(leng>3 and ll[0]=='Forces' and ll[1]=='acting'):
-          print(ll)
+          #print(ll)
           ll=inf.readline().split()
           force=np.zeros((nat,4))
           for i in range(nat):
