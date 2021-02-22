@@ -57,6 +57,7 @@ def read_write_dat(infile,outdir='./',step=-1):
                       snap['force'][iatom,0] =  float(line[11])
                       snap['force'][iatom,1] =  float(line[12])
                       snap['force'][iatom,2] =  float(line[13])
+                      print(int(line[1])-1)
                       snap['type'][iatom]  =  int(line[1])-1
                       coordf.write('{} {} {} '.format(snap['coord'][iatom,0],snap['coord'][iatom,1],snap['coord'][iatom,2]))
                       forcef.write('{} {} {} '.format(snap['force'][iatom,0],snap['force'][iatom,1],snap['force'][iatom,2]))
