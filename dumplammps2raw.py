@@ -44,19 +44,19 @@ def read_write_dat(infile,outdir='./',step=-1):
                     llbox[i] = float(line[0])
                     box[i] = float(line[1]) - llbox[i]
                  boxf.write('{} 0.0 0.0 0.0 {} 0.0 0.0 0.0 {} \n'.format(box[0],box[1],box[2]))
-                 llbox = -llbox
+#                 llbox = -llbox
                  line = in_file.readline().split()[2:]
                  #TODO understand what is dumped
                  for iatom in np.arange(natoms):
                       line =  in_file.readline().split()
-                      snap['coord'][iatom,0] =  float(line[2]) + llbox[0]
-                      snap['coord'][iatom,1] =  float(line[3]) + llbox[1]
-                      snap['coord'][iatom,2] =  float(line[4]) + llbox[2]
-                      for ii in range(3):
-                          wrap_coord(box[ii],snap['coord'][iatom,ii])
-                      snap['force'][iatom,0] =  float(line[8])
-                      snap['force'][iatom,1] =  float(line[9])
-                      snap['force'][iatom,2] =  float(line[10])
+                      snap['coord'][iatom,0] =  float(line[2])# + llbox[0]
+                      snap['coord'][iatom,1] =  float(line[3])# + llbox[1]
+                      snap['coord'][iatom,2] =  float(line[4])# + llbox[2]
+#                      for ii in range(3):
+#                          wrap_coord(box[ii],snap['coord'][iatom,ii])
+                      snap['force'][iatom,0] =  float(line[11])
+                      snap['force'][iatom,1] =  float(line[12])
+                      snap['force'][iatom,2] =  float(line[13])
                       snap['type'][iatom]  =  int(line[1])-1
                       coordf.write('{} {} {} '.format(snap['coord'][iatom,0],snap['coord'][iatom,1],snap['coord'][iatom,2]))
                       forcef.write('{} {} {} '.format(snap['force'][iatom,0],snap['force'][iatom,1],snap['force'][iatom,2]))
@@ -91,7 +91,7 @@ def write_ener(enerfile,outdir='./', stepf='./Nstep.data'):
 if len(sys.argv)<3:
     print ("Uso: {} [prefix_file_in] [file_out] [enerfile] [stop (optional)] ".format(sys.argv[0]))
     print ("script to read a lammps dump file and write them on a .raw file without any other line")
-    print ("the structure of the dump is ITEM: ATOMS id type xu yu zu vx vy vz fx fy fz")
+    print ("the structure of the dump is ITEM: ATOMS id type x y z ix iy iz vx vy vz fx fy fz mass")
     exit(-1)
 
 stop=-1
