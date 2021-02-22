@@ -60,10 +60,10 @@ def read_write_dat(infile,outdir='./',step=-1):
                       snap['type'][iatom]  =  int(line[1])-1
                       coordf.write('{} {} {} '.format(snap['coord'][iatom,0],snap['coord'][iatom,1],snap['coord'][iatom,2]))
                       forcef.write('{} {} {} '.format(snap['force'][iatom,0],snap['force'][iatom,1],snap['force'][iatom,2]))
-                     # if (old[iatom] != snap['type'][iatom] and dt > 1 ):
-                     #     print('old[',iatom,'] != snap[\'type\'] [',iatom,']  ->  ',old[iatom], ' != ',  snap['type'] [iatom])
-                     #     print('at step ',dt)
-                     #     return
+                      if (old[iatom] != snap['type'][iatom] and dt > 1 ):
+                          print('old[',iatom,'] != snap[\'type\'] [',iatom,']  ->  ',old[iatom], ' != ',  snap['type'] [iatom])
+                          print('at step ',dt)
+                          return
                  old[:] = snap['type'][:]
                  coordf.write('\n')
                  forcef.write('\n')
