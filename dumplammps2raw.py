@@ -55,9 +55,9 @@ def read_write_dat(infile,outdir='./',step=-1):
                       snap['coord'][iatom,2] =  float(line[4]) + llbox[2]
                       for ii in range(3):
                           wrap_coord(box[ii],snap['coord'][iatom,ii])
-                      snap['force'][iatom,0] =  float(line[8])
-                      snap['force'][iatom,1] =  float(line[9])
-                      snap['force'][iatom,2] =  float(line[10])
+                      snap['force'][iatom,0] =  float(line[11])
+                      snap['force'][iatom,1] =  float(line[12])
+                      snap['force'][iatom,2] =  float(line[13])
                       snap['type'][iatom]  =  int(line[1])-1
                       snap['atoms'][iatom] = int(line[1])
                  for iatom in np.argsort(snap['atoms']): 
@@ -95,7 +95,7 @@ def write_ener(enerfile,outdir='./', stepf='./Nstep.data'):
 if len(sys.argv)<3:
     print ("Uso: {} [prefix_file_in] [file_out] [enerfile] [stop (optional)] ".format(sys.argv[0]))
     print ("script to read a lammps dump file and write them on a .raw file without any other line")
-    print ("the structure of the dump is ITEM: ATOMS id type xu yu zu vx vy vz fx fy fz")
+    print ("the structure of the dump is ITEM: ATOMS id type x y z ix iy iz vx vy vz fx fy fz mass")
     exit(-1)
 
 stop=-1
