@@ -127,6 +127,7 @@ def  main():
    force[:,:3] *= convForce
    box *= bohr_radius
    atom *= box[0]
+   stress *= 2.1798741 / (5.291772109)**3 * 1e10 # Ry/bohr**3 to bar
 
    np.savetxt(bfile,box.reshape(1,-1))
    np.savetxt('type_pw.raw',force[:,3].reshape(1,-1)-1,fmt='%d')
