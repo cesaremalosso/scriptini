@@ -68,7 +68,7 @@ def read_pw(infile,logfile='log.log'):
              force[iatom,1] = float(ll[7])
              force[iatom,2] = float(ll[8])
              force[iatom,3] = float(ll[3])*1.
-          dd=False
+       
        elif (leng>3 and ll[0]=='total' and ll[1]=='stress'):
            stress = np.zeros((3,3))
            for i in range(3):
@@ -76,8 +76,9 @@ def read_pw(infile,logfile='log.log'):
                stress[i,0] = ll[0]
                stress[i,1] = ll[1]
                stress[i,2] = ll[2]
+           dd=False
        else: 
-         if(step>=1000):
+         if(step>=3000):
            fff = open('errore','w+')
            fff.write('error  in pw')
            fff.close()
