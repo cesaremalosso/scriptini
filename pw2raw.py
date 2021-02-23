@@ -142,6 +142,7 @@ def  main():
      cf.write('\n')
      for i in range(3):
          vf.write(' {:18.15e}  {:18.15e}  {:18.15e} '.format(stress[i,0],stress[i,1],stress[i,2]))
+     vf.write('\n')
    return 
 
 if( __name__ == "__main__"):
