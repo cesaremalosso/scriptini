@@ -69,6 +69,13 @@ def read_pw(infile,logfile='log.log'):
              force[iatom,2] = float(ll[8])
              force[iatom,3] = float(ll[3])*1.
           dd=False
+       elif (leng>3 and ll[0]=='total' and ll[1]=='stress'):
+           stress = np.zeros((3,3))
+           for i in range(3):
+               ll=inf.readline().split()
+               stress[i,0] = ll[0]
+               stress[i,1] = ll[1]
+               stress[i,2] = ll[2]
        else: 
          if(step>=1000):
            fff = open('errore','w+')
@@ -111,6 +118,7 @@ def  main():
    ffile = outdir + '/force_pw.raw'
    cfile = outdir + '/coord_pw.raw'
    bfile = outdir + '/box_pw.raw'
+   vfile = outdir + '/virial_pw.raw'
    
    convEne = 13.605693122994 # Ry to eV
    bohr_radius = 0.529177210903 # bohr to Ams
@@ -123,14 +131,15 @@ def  main():
    np.savetxt(bfile,box.reshape(1,-1))
    np.savetxt('type_pw.raw',force[:,3].reshape(1,-1)-1,fmt='%d')
 
-   with open(efile,'w') as ef , open(ffile,'w') as ff, open(cfile,'w') as cf :
+   with open(efile,'w') as ef , open(ffile,'w') as ff, open(cfile,'w') as cf, open(vfile,'w') as vf :
      ef.write('{} \n'.format(energy))
      for iat in range(nat) : 
         ff.write(' {:18.15e}  {:18.15e}  {:18.15e} '.format(force[iat,0],force[iat,1],force[iat,2]))
         cf.write(' {:18.15e}  {:18.15e}  {:18.15e} '.format(atom[iat,0],atom[iat,1],atom[iat,2]))
      ff.write('\n')
      cf.write('\n')
-   
+     for i in range(3):
+         vf.write(' {:18.15e}  {:18.15e}  {:18.15e} '.format(stress[i,0],stress[i,1],stress[i,2]))
    return 
 
 if( __name__ == "__main__"):
