@@ -86,7 +86,7 @@ def read_pw(infile,logfile='log.log'):
            energy = None
            force = None
 
-     return nat , energy , force , atom , box
+     return nat , energy , force , atom , box, stress
 def  main():
    parser = argparse.ArgumentParser(description = 'write force.raw and energy.raw with ewald contributions')
    parser.add_argument('-i','--pwout',
@@ -104,7 +104,7 @@ def  main():
    infile= args.pwout
    outdir = args.outdir
 
-   nat , energy , force , atom , box = read_pw(infile)
+   nat , energy , force , atom , box, stress = read_pw(infile)
    if (nat == None or energy == None ):
            fff = open('errore','w+')
            fff.write('error  in pw')
