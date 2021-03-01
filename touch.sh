@@ -3,7 +3,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=182000
-#SBATCH --time=23:59:00
+#SBATCH --time=01:59:00
 #SBATCH --account=Sis20_baroni
 #SBATCH --partition=skl_usr_prod
 #SBATCH --job-name=ttNVT
