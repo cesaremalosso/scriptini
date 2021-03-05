@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys
-sys.path.append(/marconi/home/userexternal/cmalosso/thermocepstrum/themocepstrum)
+sys.path.append('/marconi/home/userexternal/cmalosso/thermocepstrum/themocepstrum')
 import thermocepstrum as tc
 import numpy as np
 import argparse
@@ -25,7 +25,8 @@ def block_analysis(data, tmax, dt_fs, vol):
         init = Nstep * ij
         end = Nstep * (ij + 1) if Nstep * (ij + 1) < jen.shape[0] else jen.shape[0]
 
-        T.append(np.mean(temp[init:end]))
+        Tmean = np.mean(temp[init:end])
+        T.append(Tmean)
 
         jj = tc.HeatCurrent(j=jen[init:end], DT_FS=dt_fs, TEMPERATURE=Tmean, units='metal_vis', VOLUME=vol,
                             PSD_FILTER_W=0.05)
@@ -50,11 +51,11 @@ def main():
                         required=True,
                         help='volume')
     parser.add_argument('--first',
-                        type=float,
+                        type=int,
                         required=True,
                         help='first file')
     parser.add_argument('--last',
-                        type=float,
+                        type=int,
                         required=True,
                         help='last file')
     parser.add_argument('--timelist',
@@ -64,12 +65,12 @@ def main():
                         help='list of the size of blocks for block-analysis')
     args = parser.parse_args()
 
-    first = args.fist
+    first = args.first
     last = args.last
 
     lista = []
     for i in range(first,last+1):
-        lista.append(np.loadtxt('stress{}.{}fs.out'.format(i,args.dt),skiprows=1))
+        lista.append(np.loadtxt('stress{}.{}fs.out'.format(i,int(args.dt)),skiprows=1))
     data = np.concatenate(lista)
 
 
