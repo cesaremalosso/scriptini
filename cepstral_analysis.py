@@ -31,12 +31,14 @@ def green_kubo(data, tmax, dt_fs):
         for i in range(3):
             corr.append(np.array(autocorr(jen[init:end, i])))
         mean_corr = (corr[0]+corr[1]+corr[2])/3
-        result[ij] = [tmean, np.sum(mean_corr)]
+        np.savetxt('{}_auto.out'.format(ij), mean_corr)
+        result[ij] = [tmean, np.sum(mean_corr[:np.size(mean_corr)//4])]
+
     return result
 
 def block_analysis(data, tmax, dt_fs, vol):
-    jen = data[:,3:]
-    temp = data[:,2]
+    jen = data[:, 3:]
+    temp = data[:, 2]
 
     Nstep = int(np.rint(tmax / (dt_fs * 1e-3)))
     maxrows = np.size(jen, 0)
@@ -61,9 +63,10 @@ def block_analysis(data, tmax, dt_fs, vol):
         # S(w=0) average
         psds1 += (jj.psd[0] - psds1) / (ij + 1)
         psds2 += (jj.psd[0] ** 2 - psds2) / (ij + 1)
-
-    psdstd = np.sqrt((psds2 - psds1 ** 2) / (Ncurrs - 1))
-
+    if Ncurrs > 1:
+        psdstd = np.sqrt((psds2 - psds1 ** 2) / (Ncurrs - 1))
+    else:
+        psdstd = 0
     return result, psds1 * jj.kappa_scale / 2, psdstd * jj.kappa_scale / 2
 
 def main():
@@ -72,10 +75,10 @@ def main():
                         type=float,
                         required=True,
                         help='time step in femtoseconds')
-    parser.add_argument('-v','--vol',
+    parser.add_argument('-b','--box',
                         type=float,
                         required=True,
-                        help='volume')
+                        help='box unit size')
     parser.add_argument('--first',
                         type=int,
                         required=True,
@@ -93,15 +96,19 @@ def main():
 
     first = args.first
     last = args.last
+    vol = args.box**3
 
     lista = []
     for i in range(first,last+1):
-        lista.append(np.loadtxt('stress{}.{}fs.out'.format(i,int(args.dt)),skiprows=1))
+        if args.dt % 1 == 0:
+            lista.append(np.loadtxt('stress{}.{:.0f}fs.out'.format(i,args.dt),skiprows=1))
+        else:
+            lista.append(np.loadtxt('stress{}.{:.1f}fs.out'.format(i, args.dt), skiprows=1))
     data = np.concatenate(lista)
 
 
     for time in args.timelist:
-        block_result, mean, mean_std = block_analysis(data, time, args.dt, args.vol)
+        block_result, mean, mean_std = block_analysis(data, time, args.dt, vol)
         print(mean, mean_std)
         np.savetxt('{}ps_result.out'.format(time), block_result)
 
@@ -111,7 +118,7 @@ def main():
 
         gk_result = green_kubo(data, time, args.dt)
         for i in range(np.size(gk_result,0)):
-            conv = args.vol / kB / gk_result[i,0] * bartoPa ** 2 * 1e-11
+            conv = vol / kB / gk_result[i,0] * bartoPa ** 2 * 1e-11
             gk_result[i,1] *= conv
         np.savetxt('{}ps_gk-result.out'.format(time), gk_result)
 
