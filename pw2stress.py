@@ -8,6 +8,7 @@ def read_pw(infile):
         while (dd):
             dd+=1
             ll = inf.readline().split()
+            leng = len(ll)
             if (leng > 3 and ll[0] == 'total' and ll[1] == 'stress'):
                 stress = np.zeros((3, 3))
                 for i in range(3):
