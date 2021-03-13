@@ -17,11 +17,11 @@ def read_pw(infile):
                     stress[i, 2] = ll[5]
                 dd = False
             else:
-            if (step >= 3000):
-                fff = open('errore', 'w+')
-                fff.write('error  in pw')
-                fff.close()
-                dd = False
+                if (step >= 3000):
+                    fff = open('errore', 'w+')
+                    fff.write('error  in pw')
+                    fff.close()
+                    dd = False
 
     return stress
 
