@@ -19,7 +19,7 @@ thermo_style custom step time ke pe etotal temp press density lx ly lz
 
 fix finvt1 all nvt temp $i $i \$(100.0*dt) 
 dump NVTdump all custom 50 dump0.10fs.lammpstrj id type x y z ix iy iz vx vy vz fx fy fz mass
-dump binDump4 all custom 4 dump$i.0.8fs.bin id type x y z vx vy vz
+dump binDump4 all custom 4 dump0.0.8fs.bin id type x y z vx vy vz
 run $2 
 
 
