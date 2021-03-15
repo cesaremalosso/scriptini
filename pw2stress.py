@@ -10,6 +10,7 @@ def read_pw(infile):
             ll = inf.readline().split()
             leng = len(ll)
             if (leng > 3 and ll[0] == 'total' and ll[1] == 'stress'):
+                pressure = ll[5]
                 stress = np.zeros((3, 3))
                 for i in range(3):
                     ll = inf.readline().split()
@@ -24,7 +25,7 @@ def read_pw(infile):
                     fff.close()
                     dd = False
 
-    return stress
+    return stress, pressure
 
 def main():
     parser = argparse.ArgumentParser(description='grep the stress in kbar from pws files')
@@ -42,9 +43,14 @@ def main():
     infile = args.pwout
     outdir = args.outdir
 
-    stress = read_pw(infile)
+    stress, pressure = read_pw(infile)
 
     vfile = outdir + '/stress_pw.out'
+    pfile = outdir + '/pressure_pw.out'
+
+    with open(pfile, 'w') as pf:
+        pf.write('{} \n'.format(pressure))
+
     with open(vfile, 'w') as vf:
         for i in range(3):
             vf.write(' {:18.15e}  {:18.15e}  {:18.15e} \n'.format(stress[i, 0], stress[i, 1], stress[i, 2]))
