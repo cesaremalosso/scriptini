@@ -18,7 +18,7 @@ def green_kubo(jen, temp, tmax, gk_tmax, dt_fs):
     maxrows = np.size(jen, 0)
     Ncurrs = maxrows // Nstep
 
-    result = np.zeros((Ncurrs, 11))
+    result = np.zeros((Ncurrs, 12))
     for ij in range(Ncurrs):
         init = Nstep * ij
         end = Nstep * (ij + 1) if Nstep * (ij + 1) < jen.shape[0] else jen.shape[0]
@@ -30,9 +30,9 @@ def green_kubo(jen, temp, tmax, gk_tmax, dt_fs):
             corr.append(np.array(autocorr(jen[init:end, i])))
         mean_corr = (corr[0]+corr[1]+corr[2])/3
         np.savetxt('{}_auto.out'.format(ij), mean_corr)
-        result[ij] = [tmean,np.sum(mean_corr[:int(50e3)]),np.sum(mean_corr[:int(100e3)]), np.sum(mean_corr[:int(150e3)]),
-                      np.sum(mean_corr[:int(200e3)]), np.sum(mean_corr[:int(250e3)]), np.sum(mean_corr[:int(300e3)]),
-                      np.sum(mean_corr[:int(350e3)]), np.sum(mean_corr[:int(400e3)]),np.sum(mean_corr[:int(450e3)]), np.sum(mean_corr[:int(500e3)])]
+        result[ij] = [tmean, np.sum(mean_corr[:int(200e3)]), np.sum(mean_corr[:int(250e3)]), np.sum(mean_corr[:int(300e3)]),
+                      np.sum(mean_corr[:int(350e3)]), np.sum(mean_corr[:int(400e3)]), np.sum(mean_corr[:int(450e3)]), np.sum(mean_corr[:int(500e3)]),
+                      np.sum(mean_corr[:int(750e3)]), np.sum(mean_corr[:int(1000e3)]), np.sum(mean_corr[:int(2000e3)]), np.sum(mean_corr[:int(4000e3)])]
 
     return result
 
@@ -138,7 +138,7 @@ def main():
 #            f.write('# mean temperature \t tmax = {} \t tmax = {} \t tmax = {}\n'.format(args.tmax/2,
 #                                                                                       args.tmax, args.tmax*2))
             np.savetxt(f, gk_result)
-            mean = np.array([np.mean(gk_result[:,i]) for i in range(11)])
+            mean = np.array([np.mean(gk_result[:,i]) for i in range(12)])
             f.write('# mean values \n')
             np.savetxt(f, mean.reshape(1, mean.shape[0]))
 #            f.write('{} \t {} \t {} \t {}'.format(np.mean(gk_result[:,0]), np.mean(gk_result[:,1]), np.mean(gk_result[:,2]), np.mean(gk_result[:,3])))
