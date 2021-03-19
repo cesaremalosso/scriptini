@@ -54,6 +54,7 @@ def main():
     fstar_list = args.fstar
 
     lista = []
+    print('start reading the time series...')
     for i in range(first,last+1):
         if args.dt % 1 == 0:
             lista.append(np.loadtxt('{}stress{}.{:.0f}fs.out'.format(args.dir,i,time_step),skiprows=1))
@@ -73,7 +74,7 @@ def main():
     jjjen = {}
     for aic in aic_factors:
         TSKIP_LIST = np.array([nnjen.Nyquist_f_THz/j for j in fstar_list], dtype=np.int)
-        jjjen[aic], ax, f = tc.heatcurrent.fstar_analysis(nnjen, TSKIP_LIST, Kmin_corrfactor=aic)
+        jjjen[aic] = tc.heatcurrent.fstar_analysis(nnjen, TSKIP_LIST, Kmin_corrfactor=aic, plot=False)
 
     output='fstar_analysis.out'
 
