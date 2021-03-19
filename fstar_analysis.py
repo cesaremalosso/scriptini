@@ -39,6 +39,11 @@ def main():
                         nargs='+',
                         required=True,
                         help='list of fstar')
+    parser.add_argument('--plot',
+                        type=bool,
+                        required=False,
+                        default=True,
+                        help='true to print the psd')
     parser.add_argument('--dir',
                         type=str,
                         required=False,
@@ -52,6 +57,7 @@ def main():
     time_step = args.dt
     aic_factors = args.aic
     fstar_list = args.fstar
+    plot = args.plot
 
     lista = []
     print('start reading the time series...')
@@ -71,6 +77,12 @@ def main():
         u = 'real_vis'
 
     nnjen=tc.HeatCurrent(jen,units=u,DT_FS=time_step,TEMPERATURE=np.mean(temp),VOLUME=vol,PSD_FILTER_W= 0.1)
+    if plot == True:
+        conv = nnjen.kappa_scale / 2 * 100
+        psd = np.hstack((nnjen.freqs_THz, nnjen.psd*conv))
+        with open('psd.out', 'w') as ps:
+            ps.write('# frequency (THz) \t PSD (cP) \n')
+            np.savetxt(ps, np.transpose(psd))
     jjjen = {}
     for aic in aic_factors:
         TSKIP_LIST = np.array([nnjen.Nyquist_f_THz/j for j in fstar_list], dtype=np.int)
