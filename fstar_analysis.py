@@ -79,7 +79,7 @@ def main():
     nnjen=tc.HeatCurrent(jen,units=u,DT_FS=time_step,TEMPERATURE=np.mean(temp),VOLUME=vol,PSD_FILTER_W= 0.1)
     if plot == True:
         conv = nnjen.kappa_scale / 2 * 100
-        psd = np.hstack((nnjen.freqs_THz, nnjen.psd*conv))
+        psd = np.vstack((nnjen.freqs_THz, nnjen.psd*conv))
         with open('psd.out', 'w') as ps:
             ps.write('# frequency (THz) \t PSD (cP) \n')
             np.savetxt(ps, np.transpose(psd))
