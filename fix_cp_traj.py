@@ -169,25 +169,25 @@ def main ():
   else:
     print " {} is empty.".format(filename)
  # 
- # # EVP - thermo file
- # filename = prefix + '.evp'
- # print "* Fixing {} file...".format(filename)
- # outfilename = outprefix + '.evp'
- # if fstat(filename).st_size:  # if file is not empty
- #   try:
- #     data, steps, headline = read_scalar_timeseries(filename)
- #     skip = check_extra_steps(steps)
- #     data = np.delete(data, skip, 0)
- #     with open(outfilename, 'w') as f:
- #       if len(headline):
- #         f.write(headline)
- #       np.savetxt(f, data, fmt=' %s')
- #     print "  --> {} written".format(outfilename)
- #   except RuntimeError as e:
- #     print 'Error reading file.\n{} {}'.format(e.errno, e.strerror)
- # else:
- #   print " {} is empty.".format(filename)
- # 
+  # EVP - thermo file
+  filename = prefix + '.evp'
+  print "* Fixing {} file...".format(filename)
+  outfilename = outprefix + '.evp'
+  if fstat(filename).st_size:  # if file is not empty
+    try:
+      data, steps, headline = read_scalar_timeseries(filename)
+      skip = check_extra_steps(steps)
+      data = np.delete(data, skip, 0)
+      with open(outfilename, 'w') as f:
+        if len(headline):
+          f.write(headline)
+        np.savetxt(f, data, fmt=' %s')
+      print "  --> {} written".format(outfilename)
+    except RuntimeError as e:
+      print 'Error reading file.\n{} {}'.format(e.errno, e.strerror)
+  else:
+    print " {} is empty.".format(filename)
+  
  # # FOR - forces file
  # filename = prefix + '.for'
  # print "* Fixing {} file...".format(filename)
@@ -228,27 +228,27 @@ def main ():
  # else:
  #   print " {} is empty.".format(filename)
  # 
- # # POS - positions file
- # filename = prefix + '.pos'
- # print "* Fixing {} file...".format(filename)
- # outfilename = outprefix + '.pos'
- # if fstat(filename).st_size:  # if file is not empty
- #   try:
- #     data, steps, times = read_matrix_timeseries(filename, natoms)
- #     skip = check_extra_steps(steps)
- #     data = np.delete(data, skip, 0)
- #     steps = np.delete(steps, skip, 0)
- #     times = np.delete(times, skip, 0)
- #     with open(outfilename, 'w') as f:
- #       for s, t, d in zip(steps, times, data):
- #         f.write(str(s) + ' ' + t + '\n')
- #         np.savetxt(f, d, fmt=' %s')
- #     print "  --> {} written".format(outfilename)
- #   except RuntimeError as e:
- #     print 'Error reading file.\n{} {}'.format(e.errno, e.strerror)
- # else:
- #   print " {} is empty.".format(filename)
- # 
+  # POS - positions file
+  filename = prefix + '.pos'
+  print "* Fixing {} file...".format(filename)
+  outfilename = outprefix + '.pos'
+  if fstat(filename).st_size:  # if file is not empty
+    try:
+      data, steps, times = read_matrix_timeseries(filename, natoms)
+      skip = check_extra_steps(steps)
+      data = np.delete(data, skip, 0)
+      steps = np.delete(steps, skip, 0)
+      times = np.delete(times, skip, 0)
+      with open(outfilename, 'w') as f:
+        for s, t, d in zip(steps, times, data):
+          f.write(str(s) + ' ' + t + '\n')
+          np.savetxt(f, d, fmt=' %s')
+      print "  --> {} written".format(outfilename)
+    except RuntimeError as e:
+      print 'Error reading file.\n{} {}'.format(e.errno, e.strerror)
+  else:
+    print " {} is empty.".format(filename)
+  
  # # STR - box stress tensor file
  # filename = prefix + '.str'
  # print "* Fixing {} file...".format(filename)
