@@ -253,6 +253,9 @@ def write_xyz(outfile, data, natoms_per_type, type_names=None, xyz = False, vel 
 		if 'str' in data:
 			out_virial_raw = open('virial.raw', 'ba')
 			out_virial_raw.truncate(0)
+		if 'vel' in data:
+			out_vel_raw = open('vel.raw','ba')
+			out_vel_raw.truncate(0)
 	
 	
 	#out_file.write("This Text is going to out file\nLook at it and see\n")
@@ -328,6 +331,9 @@ def write_xyz(outfile, data, natoms_per_type, type_names=None, xyz = False, vel 
 				np.savetxt(out_virial_raw, np.reshape(VIR[itimestep_raw, :, :], 9*natoms), newline = " ")
 				out_virial_raw.write('\n'.encode("utf-8"))
 			#out_box_raw.write(np.reshape(CELL[itimestep_raw, :, :], 9*natoms))
+			if 'vel' in data:
+				np.savetxt(out_vel_raw, np.reshape(VEL[itimestep_raw, :, :], 3*natoms), newline = " ")
+				out_vel_raw.write('\n'.encode("utf-8"))
 			for ibox in range(8):
 				out_box_raw.write('{} '.format(CELL[itimestep_raw, ibox]))
 			out_box_raw.write('{}\n'.format(CELL[itimestep_raw, -1]))
