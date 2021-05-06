@@ -11,7 +11,7 @@ BOHR = 0.529177249    # Bohr constant in Angstrom
 TAU  = 0.5*4.8378e-5  # tau_CP constant in ps
 HARTREE = 27.211386245988 #eV
 eV=1.60217662 #10^-19 J
-bar=1.0e-2 /eV #eV/Ang^3
+bar=1.0e-2 /eV #GPa to eV/Ang^3
 
 def read_file_pos_vel(prefix, natoms, nstep=None):
 	"""
