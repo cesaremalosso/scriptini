@@ -128,6 +128,7 @@ def  main():
    force[:,:3] *= convForce
    stress *= convEne * box[0]**3 # Ry/bohr**3 to eV
    box *= bohr_radius
+   stress *= 1 / box[0] ** 3  # eV to eV/Ams**3
    atom *= box[0]
 #   stress *= 2.1798741 / (5.291772109)**3 * 1e10 # Ry/bohr**3 to bar
 
