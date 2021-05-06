@@ -11,7 +11,7 @@ BOHR = 0.529177249    # Bohr constant in Angstrom
 TAU  = 0.5*4.8378e-5  # tau_CP constant in ps
 HARTREE = 27.211386245988 #eV
 eV=1.60217662 #10^-19 J
-bar=1.0e-2 /eV #GPa to eV/Ang^3
+bar=1.0e-2/eV #eV/Ang^3
 
 def read_file_pos_vel(prefix, natoms, nstep=None):
 	"""
@@ -80,7 +80,7 @@ def read_file_pos_vel(prefix, natoms, nstep=None):
 	try:
 		filestr = open(prefix + '.str', 'r')
 		read_stress = True
-		data['str']  = np.zeros((nstep,natoms,9), dtype = np.float64)
+		data['str']  = np.zeros((nstep,9), dtype = np.float64)
 	except IOError as err:
 		err = re.sub(r'\[.*\]', '', str(err))
 		print('Warning!' + err + '. The .str file is not present: it will be ignored')
@@ -179,7 +179,7 @@ def read_file_pos_vel(prefix, natoms, nstep=None):
 				for iiline in range(3):
 					linestr = filestr.readline()
 					values = np.array(linestr.split())
-					data['str'][istep,iatom,3*iiline:3*iiline+3] = values[:]
+					data['str'][istep,3*iiline:3*iiline+3] = values[:]
 	    
 		#lettura cella
 		#values = np.array(linecel.split(), dtype=np.float64)
@@ -322,13 +322,14 @@ def write_xyz(outfile, data, natoms_per_type, type_names=None, xyz = False, vel 
 			sides = np.diag(np.reshape(CELL[itimestep_raw], (3, 3)))
 			tosave = np.reshape(tosave%sides, 3*natoms) # TODO: implement PBC in more general cases
 			np.savetxt(out_coord_raw, tosave, newline = " ")
+			#print(tosave)
 			out_coord_raw.write('\n'.encode("utf-8"))
 			#if 'for' in data: out_force_raw.write(np.reshape(FOR[itimestep_raw, :, :], 3*natoms)) 
 			if 'for' in data:
 				np.savetxt(out_force_raw, np.reshape(FOR[itimestep_raw, :, :], 3*natoms), newline = " ")
 				out_force_raw.write('\n'.encode("utf-8"))
 			if 'str' in data:
-				np.savetxt(out_virial_raw, np.reshape(VIR[itimestep_raw, :, :], 9*natoms), newline = " ")
+				np.savetxt(out_virial_raw, np.reshape(VIR[itimestep_raw, :], 9), newline = " ")
 				out_virial_raw.write('\n'.encode("utf-8"))
 			#out_box_raw.write(np.reshape(CELL[itimestep_raw, :, :], 9*natoms))
 			if 'vel' in data:
@@ -338,6 +339,7 @@ def write_xyz(outfile, data, natoms_per_type, type_names=None, xyz = False, vel 
 				out_box_raw.write('{} '.format(CELL[itimestep_raw, ibox]))
 			out_box_raw.write('{}\n'.format(CELL[itimestep_raw, -1]))
 			out_energy_raw.write('{}\n'.format(EPOT[itimestep_raw]))
+			
 
 		for attype, nattype in enumerate(natoms_per_type):
 			firstat = cumnattype[attype]
@@ -406,6 +408,12 @@ def write_xyz(outfile, data, natoms_per_type, type_names=None, xyz = False, vel 
 				jion[1],
 				jion[2] \
 				)) 
+        
+	out_vel_raw.close()
+	out_virial_raw.close()
+	out_coord_raw.close()
+	out_energy_raw.close()
+	out_box_raw.close()
 	out_file.close()
 	return
 
