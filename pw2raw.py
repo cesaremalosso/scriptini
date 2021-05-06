@@ -132,7 +132,7 @@ def  main():
 #   stress *= 2.1798741 / (5.291772109)**3 * 1e10 # Ry/bohr**3 to bar
 
    np.savetxt(bfile,box.reshape(1,-1))
-   np.savetxt('type_pw.raw',force[:,3].reshape(1,-1)-1,fmt='%d')
+   np.savetxt(outdir+'type_pw.raw',force[:,3].reshape(1,-1)-1,fmt='%d')
 
    with open(efile,'w') as ef , open(ffile,'w') as ff, open(cfile,'w') as cf, open(vfile,'w') as vf :
      ef.write('{} \n'.format(energy))
