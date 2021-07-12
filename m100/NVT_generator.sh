@@ -37,7 +37,7 @@ cat > slurm_simulation0.pbs <<EOF
 #SBATCH --time=05:00:00
 #SBATCH --account=Sis21_baroni_0
 #SBATCH --partition=m100_usr_prod
-#SBATCH --job-name=SCAN_350K
+#SBATCH --job-name=NVT-$i
 #SBATCH --mail-user=cmalosso@sissa.it
 ##SBATCH --qos=m100_qos_dbg # da scommentare per la coda debug massimo 2 Nodi
 #SBATCH --mail-type=ALL
