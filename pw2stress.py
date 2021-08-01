@@ -1,6 +1,11 @@
 import numpy as np
 import argparse
 
+BOHR = 0.529177249e-10 # Bohr constant in Metres
+Ry = 2.1798723611035e-18 # Rydberg constan in Joules
+
+tobar = Ry/BOHR**3/1e5
+
 def read_pw(infile):
     with open(infile, 'r') as inf:
         dd = True
@@ -10,13 +15,14 @@ def read_pw(infile):
             ll = inf.readline().split()
             leng = len(ll)
             if (leng > 3 and ll[0] == 'total' and ll[1] == 'stress'):
-                pressure = ll[5]
+#                pressure = ll[5]
                 stress = np.zeros((3, 3))
                 for i in range(3):
                     ll = inf.readline().split()
-                    stress[i, 0] = ll[3]
-                    stress[i, 1] = ll[4]
-                    stress[i, 2] = ll[5]
+                    stress[i, 0] = float(ll[0])*tobar
+                    stress[i, 1] = float(ll[1])*tobar
+                    stress[i, 2] = float(ll[2])*tobar
+                pressure = np.trace(stress)/3
                 dd = False
             else:
                 if (step >= 3000):
