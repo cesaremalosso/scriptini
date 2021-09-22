@@ -1,9 +1,8 @@
-#!/usr/bin/python
 from scipy.constants import N_A
 
-def len(hmass,omass,nmol,rho):
+def lenn(hmass,omass,nmol,rho):
     V = (omass*nmol+hmass*2*nmol)/N_A/rho
-    print(str(V**(1/3)*1e9) + ' angstrom')
+    print(str(V**(1/3)*1e8) + ' angstrom')
 
 
 
@@ -25,7 +24,7 @@ def main():
                         required=True,
                         help='mass of hydrogen and oxygen atoms')
     args = parser.parse_args()
-    len(args.masses[0],args.masses[1],args.nmols,args.target)
+    lenn(args.masses[0],args.masses[1],args.nmols,args.target)
 if __name__ == "__main__":
   main()
 
