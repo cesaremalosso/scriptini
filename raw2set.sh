@@ -1,6 +1,6 @@
 #!/bin/bash
 
-nline_per_set=1000
+nline_per_set=100000
 
 if test $# -ge 1; then
     nline_per_set=$1

@@ -33,6 +33,7 @@ if [ $run2 = $run1 ]
 then for i  in $run1
 do
 j=$(awk -v k=$i 'BEGIN{print k-1'})
+jj=$(awk -v k=$length 'BEGIN{print k-1'})
 cat > NVElammps$i.in <<EOF
 log "log$i.log"
 units metal                   
@@ -55,7 +56,10 @@ variable s6 equal c_thermo_press[6]
 thermo_style custom step time pe etotal lx press temp 
 
 fix finve all nve     
+run 1
+unfix finve
 
+fix finve2 all nve
 dump myDumpforTrain all custom 4 dump$i.08fs.lammpstrj id type x y z ix iy iz vx vy vz fx fy fz mass
 dump_modify myDumpforTrain format float %20.15g
 dump binDump4 all custom 4 dump$i.0.8fs.bin id type xu yu zu vx vy vz
@@ -63,7 +67,10 @@ print "&&&& START NVE"
 
 fix 5 all print 2 "\${time} \${epress} \${Temp} \${s4} \${s5} \${s6}" file stress$i.0.4fs.out screen "no" title "time Press Temp sxy sxz syz" 
 
-run $length
+run $jj
+unfix finve2
+unfix 5
+
 write_restart final$i.restart
 write_data final$i.data
 EOF
@@ -74,7 +81,7 @@ cat > slurm_simulation$i.pbs <<EOF
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem=230000MB
 #SBATCH --gres=gpu:4
-#SBATCH --time=05:00:00
+#SBATCH --time=24:00:00
 #SBATCH --account=Sis21_baroni_0
 #SBATCH --partition=m100_usr_prod
 #SBATCH --job-name=NVE-$i
@@ -96,6 +103,7 @@ else
 for i in $(seq $run1 $run2)
 do
 j=$(awk -v k=$i 'BEGIN{print k-1'})
+jj=$(awk -v k=$length 'BEGIN{print k-1'})
 cat > NVElammps$i.in <<EOF
 log "log$i.log"
 units metal                   
@@ -118,7 +126,10 @@ variable s6 equal c_thermo_press[6]
 thermo_style custom step time pe etotal lx press temp 
 
 fix finve all nve     
+run 1
+unfix finve
 
+fix finve2 all nve
 dump myDumpforTrain all custom 4 dump$i.08fs.lammpstrj id type x y z ix iy iz vx vy vz fx fy fz mass
 dump_modify myDumpforTrain format float %20.15g
 dump binDump4 all custom 4 dump$i.0.8fs.bin id type xu yu zu vx vy vz
@@ -126,7 +137,9 @@ print "&&&& START NVE"
 
 fix 5 all print 2 "\${time} \${epress} \${Temp} \${s4} \${s5} \${s6}" file stress$i.0.4fs.out screen "no" title "time Press Temp sxy sxz syz" 
 
-run $length
+run $jj
+unfix finve2
+unfix 5
 write_restart final$i.restart
 write_data final$i.data
 EOF
@@ -136,7 +149,7 @@ cat > slurm_simulation$i.pbs <<EOF
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem=230000MB
 #SBATCH --gres=gpu:4
-#SBATCH --time=05:00:00
+#SBATCH --time=24:00:00
 #SBATCH --account=Sis21_baroni_0
 #SBATCH --partition=m100_usr_prod
 #SBATCH --job-name=NVE-$i
