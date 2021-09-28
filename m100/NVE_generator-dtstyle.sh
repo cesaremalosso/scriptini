@@ -80,7 +80,7 @@ cat > slurm_simulation$i.pbs <<EOF
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem=230000MB
-#SBATCH --gres=gpu:4
+#SBATCH --gpus-per-node=4
 #SBATCH --time=24:00:00
 #SBATCH --account=Sis21_baroni_0
 #SBATCH --partition=m100_usr_prod
@@ -148,7 +148,7 @@ cat > slurm_simulation$i.pbs <<EOF
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem=230000MB
-#SBATCH --gres=gpu:4
+#SBATCH --gpus-per-node=4
 #SBATCH --time=24:00:00
 #SBATCH --account=Sis21_baroni_0
 #SBATCH --partition=m100_usr_prod
