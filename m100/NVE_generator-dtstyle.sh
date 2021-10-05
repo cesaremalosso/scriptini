@@ -4,7 +4,6 @@ function usage
 {
    echo "         --first first run"
    echo "         --last final run"
-   echo "         -t temperature of the system"
    echo "         -l number of step of the simulation"
    echo "         -m NN model"
    echo "         -h  --help      print this help"
@@ -16,8 +15,6 @@ while [ $# -gt 0 ]; do
         --first )         shift; run1=$1
                           ;;
         --last )         shift; run2=$1
-                          ;;
-        -t )              shift; temp=$1
                           ;;
         -l )              shift; length=$1
                           ;;
