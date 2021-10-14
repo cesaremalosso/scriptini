@@ -22,10 +22,8 @@ def read_input_type(prefix, natoms_per_type, species):
 	for index, type in enumerate(species):
 		typemap[type] = index
 	with open(prefix + '.input', 'r') as filein:
-		dline = filein.readline().split()
 		for i in range(4000):
 			dline = filein.readline().split()
-			print(dline)
 			if (len(dline) != 0 and dline[0] == "ATOMIC_POSITIONS"):
 				for iatom in range(sum(natoms_per_type)):
 					dline = filein.readline().split()
