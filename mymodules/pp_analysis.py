@@ -24,9 +24,9 @@ def plot_gdr(gdr):
     ax.tick_params(axis='y', labelsize=ls)
     col = ['red', 'blue', 'green']
     lab = ['g_11', 'g_22', 'g_12']
-    for i in [1,3,5]:
-    #    ax.fill_between(gdr[:,0],gdr[:,i+1]-gdr[:,i+2],gdr[:,i+1]+gdr[:,i+2], color = col[i])
-        ax.plot(gdr[:,0],gdr[:,i], label = lab[i], color = col[i])
+    for i in range(3):
+        ax.fill_between(gdr[:,0],gdr[:,2*i+1]-gdr[:,2*i+2],gdr[:,2*i+1]+gdr[:,2*i+2], color = col[i])
+        ax.plot(gdr[:,0],gdr[:,2*i+1], label = lab[i], color = col[i])
     plt.legend()
 
 def read_vdos(filein,output,dt,nstep):
