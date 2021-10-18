@@ -6,14 +6,15 @@
 import numpy as np
 from os import stat as fstat
 import argparse
+import re
 
 def check_extra_steps(steps):
   # returns the indexes of the steps to be removed
   skip = []
-  for t in xrange(len(steps)-1):
+  for t in range(len(steps)-1):
     if (steps[t] >= steps[t+1]):
       first = np.argmax(steps[:] == steps[t+1])
-      print "  RESTART found at #{:d} step={:d} --> #{:d} step={:d} -- First occurance: #{:d} step={:d}  /-\-/-\-/-\  {:d} steps will be removed".format(t, int(steps[t]), t+1, int(steps[t+1]), first, int(steps[first]), t+1-first)
+      print("  RESTART found at #{:d} step={:d} --> #{:d} step={:d} -- First occurance: #{:d} step={:d}  /-\-/-\-/-\  {:d} steps will be removed".format(t, int(steps[t]), t+1, int(steps[t+1]), first, int(steps[first]), t+1-first))
       skip.extend(range(first,t+1))
   return skip
 
@@ -51,7 +52,7 @@ def read_matrix_timeseries(filename, nrows):
     while True:
       line = f.readline().split()
       if (len(line) == 0):  # EOF
-        print "  END OF FILE"
+        print("  END OF FILE")
         break
       if (len(line) == 2):    # new step line
         steps.append(int(line[0]))
@@ -59,7 +60,7 @@ def read_matrix_timeseries(filename, nrows):
       else:
         raise RuntimeError('ERROR. Wrong number of atoms?')
       data_t = ['']*nrows
-      for i in xrange(nrows):
+      for i in range(nrows):
         line = f.readline().split()
         data_t[i] = line
       data.append(np.array(data_t))
@@ -92,7 +93,7 @@ def read_matrix_key_timeseries(filename, step_key='STEP:', ncomment_lines=1):
       elif (i >= 0):
         i += 1
   nrows = i - ncomment_lines
-  print "  nrows = ", nrows
+  print("  nrows = ", nrows)
   
   steps = []
   times = []
@@ -102,7 +103,7 @@ def read_matrix_key_timeseries(filename, step_key='STEP:', ncomment_lines=1):
     while True:
       line = f.readline().split()
       if (len(line) == 0):  # EOF
-        print "  END OF FILE"
+        print("  END OF FILE")
         break
       if (line[0] == step_key):   # new step line
         steps.append(int(line[1]))
@@ -110,12 +111,12 @@ def read_matrix_key_timeseries(filename, step_key='STEP:', ncomment_lines=1):
       else:
         raise RuntimeError('ERROR. Wrong number of comment lines?\n STEP={}\n line={}'.format(steps[-1],line))
       comm_t = ['']*ncomment_lines
-      for i in xrange(ncomment_lines):
+      for i in range(ncomment_lines):
         line = f.readline()
         comm_t[i] = line
       comment.append(np.array(comm_t))
       data_t = ['']*nrows
-      for i in xrange(nrows):
+      for i in range(nrows):
         line = f.readline()
         data_t[i] = line
       data.append(data_t)
@@ -148,172 +149,193 @@ def main ():
     return 1
   natoms = args.natoms
 
-  # CEL - box cell file
-  filename = prefix + '.cel'
-  print "* Fixing {} file...".format(filename)
-  outfilename = outprefix + '.cel'
-  if fstat(filename).st_size:  # if file is not empty
-    try:
-     data, steps, times = read_matrix_timeseries(filename, 3)
-     skip = check_extra_steps(steps)
-     data = np.delete(data, skip, 0)
-     steps = np.delete(steps, skip, 0)
-     times = np.delete(times, skip, 0)
-     with open(outfilename, 'w') as f:
-       for s, t, d in zip(steps, times, data):
-         f.write(str(s) + ' ' + t + '\n')
-         np.savetxt(f, d, fmt=' %s')
-     print "  --> {} written".format(outfilename)
-    except RuntimeError as e:
-      print 'Error reading file.\n{} {}'.format(e.errno, e.strerror)
-  else:
-    print " {} is empty.".format(filename)
- # 
-  # EVP - thermo file
-  filename = prefix + '.evp'
-  print "* Fixing {} file...".format(filename)
-  outfilename = outprefix + '.evp'
-  if fstat(filename).st_size:  # if file is not empty
-    try:
-      data, steps, headline = read_scalar_timeseries(filename)
-      skip = check_extra_steps(steps)
-      data = np.delete(data, skip, 0)
-      with open(outfilename, 'w') as f:
-        if len(headline):
-          f.write(headline)
-        np.savetxt(f, data, fmt=' %s')
-      print "  --> {} written".format(outfilename)
-    except RuntimeError as e:
-      print 'Error reading file.\n{} {}'.format(e.errno, e.strerror)
-  else:
-    print " {} is empty.".format(filename)
-  
- # # FOR - forces file
- # filename = prefix + '.for'
- # print "* Fixing {} file...".format(filename)
- # outfilename = outprefix + '.for'
- # if fstat(filename).st_size:  # if file is not empty
- #   try:
- #     data, steps, times = read_matrix_timeseries(filename, natoms)
- #     skip = check_extra_steps(steps)
- #     data = np.delete(data, skip, 0)
- #     steps = np.delete(steps, skip, 0)
- #     times = np.delete(times, skip, 0)
- #     with open(outfilename, 'w') as f:
- #       for s, t, d in zip(steps, times, data):
- #         f.write(str(s) + ' ' + t + '\n')
- #         np.savetxt(f, d, fmt=' %s')
- #     print "  --> {} written".format(outfilename)
- #   except RuntimeError as e:
- #     print 'Error reading file.\n{} {}'.format(e.errno, e.strerror)
- # else:
- #   print " {} is empty.".format(filename)
- # 
- # # NOS - nos file
- # filename = prefix + '.nos'
- # print "* Fixing {} file...".format(filename)
- # outfilename = outprefix + '.nos'
- # if fstat(filename).st_size:  # if file is not empty
- #   try:
- #     data, steps, headline = read_scalar_timeseries(filename)
- #     skip = check_extra_steps(steps)
- #     data = np.delete(data, skip, 0)
- #     with open(outfilename, 'w') as f:
- #       if len(headline):
- #         f.write(headline)
- #       np.savetxt(f, data, fmt=' %s')
- #     print "  --> {} written".format(outfilename)
- #   except RuntimeError as e:
- #     print 'Error reading file.\n{} {}'.format(e.errno, e.strerror)
- # else:
- #   print " {} is empty.".format(filename)
- # 
-  # POS - positions file
-  filename = prefix + '.pos'
-  print "* Fixing {} file...".format(filename)
-  outfilename = outprefix + '.pos'
-  if fstat(filename).st_size:  # if file is not empty
-    try:
-      data, steps, times = read_matrix_timeseries(filename, natoms)
-      skip = check_extra_steps(steps)
-      data = np.delete(data, skip, 0)
-      steps = np.delete(steps, skip, 0)
-      times = np.delete(times, skip, 0)
-      with open(outfilename, 'w') as f:
-        for s, t, d in zip(steps, times, data):
-          f.write(str(s) + ' ' + t + '\n')
-          np.savetxt(f, d, fmt=' %s')
-      print "  --> {} written".format(outfilename)
-    except RuntimeError as e:
-      print 'Error reading file.\n{} {}'.format(e.errno, e.strerror)
-  else:
-    print " {} is empty.".format(filename)
-  
- # # STR - box stress tensor file
- # filename = prefix + '.str'
- # print "* Fixing {} file...".format(filename)
- # outfilename = outprefix + '.str'
- # if fstat(filename).st_size:  # if file is not empty
- #   try:
- #     data, steps, times = read_matrix_timeseries(filename, 3)
- #     skip = check_extra_steps(steps)
- #     data = np.delete(data, skip, 0)
- #     steps = np.delete(steps, skip, 0)
- #     times = np.delete(times, skip, 0)
- #     with open(outfilename, 'w') as f:
- #       for s, t, d in zip(steps, times, data):
- #         f.write(str(s) + ' ' + t + '\n')
- #         np.savetxt(f, d, fmt=' %s')
- #     print "  --> {} written".format(outfilename)
- #   except RuntimeError as e:
- #     print 'Error reading file.\n{} {}'.format(e.errno, e.strerror)
- # else:
- #   print "  ! {} is empty.".format(filename)
-  
-  # VEL - velocities file
-  filename = prefix + '.vel'
-  print "* Fixing {} file...".format(filename)
-  outfilename = outprefix + '.vel'
-  if fstat(filename).st_size:  # if file is not empty
-    try:
-      data, steps, times = read_matrix_timeseries(filename, natoms)
-      skip = check_extra_steps(steps)
-      data = np.delete(data, skip, 0)
-      steps = np.delete(steps, skip, 0)
-      times = np.delete(times, skip, 0)
-      with open(outfilename, 'w') as f:
-        for s, t, d in zip(steps, times, data):
-          f.write(str(s) + ' ' + t + '\n')
-          np.savetxt(f, d, fmt=' %s')
-      print "  --> {} written".format(outfilename)
-    except RuntimeError as e:
-      print 'Error reading file.\n{} {}'.format(e.errno, e.strerror)
-  else:
-    print " {} is empty.".format(filename)
+  term = ['.cel', '.eig', '.evp', '.for', '.nos', '.pos', '.str', '.vel'] 
+  read_file = {}
 
-  # EIG - eigenvalues file
-  filename = prefix + '.eig'
-  print "* Fixing {} file...".format(filename)
-  outfilename = outprefix + '.eig'
-  if fstat(filename).st_size:  # if file is not empty
+  for tt in term:
     try:
-      data, steps, times, comment = read_matrix_key_timeseries(filename, 'STEP:', 1)
-      skip = check_extra_steps(steps)
-      data = np.delete(data, skip, 0)
-      steps = np.delete(steps, skip, 0)
-      times = np.delete(times, skip, 0)
-      comment = np.delete(comment, skip, 0)
-      with open(outfilename, 'w') as f:
-        for s, t, c, d in zip(steps, times, comment, data):
-          f.write('  STEP:  ' + str(s) + ' ' + t + '\n')
-          f.write(c)
-          for dd in d:
-            f.write(dd)
-      print "  --> {} written".format(outfilename)
-    except RuntimeError as e:
-      print 'Error reading file.\n{} {}'.format(e.errno, e.strerror)
-  else:
-    print " {} is empty.".format(filename)
+      filein = open(prefix + tt, 'r')
+      read_file[tt] = True
+      print('The ' + tt +' file is present: it will be fixed')
+    except IOError as err:
+      err = re.sub(r'\[.*\]', '', str(err))
+      print('Warning!' + err + '. The ' + tt +' file is NOT present: it will be ignored')
+      read_file[tt] = False
+  
+  if read_file['.cel'] == True:
+    # CEL - box cell file
+    filename = prefix + '.cel'
+    print("* Fixing {} file...".format(filename))
+    outfilename = outprefix + '.cel'
+    if fstat(filename).st_size:  # if file is not empty
+      try:
+       data, steps, times = read_matrix_timeseries(filename, 3)
+       skip = check_extra_steps(steps)
+       data = np.delete(data, skip, 0)
+       steps = np.delete(steps, skip, 0)
+       times = np.delete(times, skip, 0)
+       with open(outfilename, 'w') as f:
+         for s, t, d in zip(steps, times, data):
+           f.write(str(s) + ' ' + t + '\n')
+           np.savetxt(f, d, fmt=' %s')
+       print("  --> {} written".format(outfilename))
+      except RuntimeError as e:
+        print('Error reading file.\n{} {}'.format(e.errno, e.strerror))
+    else:
+      print(" {} is empty.".format(filename))
+
+  if read_file['.evp'] == True:
+    # EVP - thermo file
+    filename = prefix + '.evp'
+    print("* Fixing {} file...".format(filename))
+    outfilename = outprefix + '.evp'
+    if fstat(filename).st_size:  # if file is not empty
+      try:
+        data, steps, headline = read_scalar_timeseries(filename)
+        skip = check_extra_steps(steps)
+        data = np.delete(data, skip, 0)
+        with open(outfilename, 'w') as f:
+          if len(headline):
+            f.write(headline)
+          np.savetxt(f, data, fmt=' %s')
+        print("  --> {} written".format(outfilename))
+      except RuntimeError as e:
+        print('Error reading file.\n{} {}'.format(e.errno, e.strerror))
+    else:
+      print(" {} is empty.".format(filename))
+  
+  if read_file['.for'] == True:
+    # FOR - forces file
+    filename = prefix + '.for'
+    print("* Fixing {} file...".format(filename))
+    outfilename = outprefix + '.for'
+    if fstat(filename).st_size:  # if file is not empty
+      try:
+        data, steps, times = read_matrix_timeseries(filename, natoms)
+        skip = check_extra_steps(steps)
+        data = np.delete(data, skip, 0)
+        steps = np.delete(steps, skip, 0)
+        times = np.delete(times, skip, 0)
+        with open(outfilename, 'w') as f:
+          for s, t, d in zip(steps, times, data):
+            f.write(str(s) + ' ' + t + '\n')
+            np.savetxt(f, d, fmt=' %s')
+        print("  --> {} written".format(outfilename))
+      except RuntimeError as e:
+        print('Error reading file.\n{} {}'.format(e.errno, e.strerror))
+    else:
+      print(" {} is empty.".format(filename))
+    
+  if read_file['.nos'] == True:
+    # NOS - nos file
+    filename = prefix + '.nos'
+    print("* Fixing {} file...".format(filename))
+    outfilename = outprefix + '.nos'
+    if fstat(filename).st_size:  # if file is not empty
+      try:
+        data, steps, headline = read_scalar_timeseries(filename)
+        skip = check_extra_steps(steps)
+        data = np.delete(data, skip, 0)
+        with open(outfilename, 'w') as f:
+          if len(headline):
+            f.write(headline)
+          np.savetxt(f, data, fmt=' %s')
+        print("  --> {} written".format(outfilename))
+      except RuntimeError as e:
+        print('Error reading file.\n{} {}'.format(e.errno, e.strerror))
+    else:
+      print(" {} is empty.".format(filename))
+    
+  if read_file['.pos'] == True:
+    # POS - positions file
+    filename = prefix + '.pos'
+    print("* Fixing {} file...".format(filename))
+    outfilename = outprefix + '.pos'
+    if fstat(filename).st_size:  # if file is not empty
+      try:
+        data, steps, times = read_matrix_timeseries(filename, natoms)
+        skip = check_extra_steps(steps)
+        data = np.delete(data, skip, 0)
+        steps = np.delete(steps, skip, 0)
+        times = np.delete(times, skip, 0)
+        with open(outfilename, 'w') as f:
+          for s, t, d in zip(steps, times, data):
+            f.write(str(s) + ' ' + t + '\n')
+            np.savetxt(f, d, fmt=' %s')
+        print("  --> {} written".format(outfilename))
+      except RuntimeError as e:
+        print('Error reading file.\n{} {}'.format(e.errno, e.strerror))
+    else:
+      print(" {} is empty.".format(filename))
+    
+  if read_file['.str'] == True:
+    # STR - box stress tensor file
+    filename = prefix + '.str'
+    print("* Fixing {} file...".format(filename))
+    outfilename = outprefix + '.str'
+    if fstat(filename).st_size:  # if file is not empty
+      try:
+        data, steps, times = read_matrix_timeseries(filename, 3)
+        skip = check_extra_steps(steps)
+        data = np.delete(data, skip, 0)
+        steps = np.delete(steps, skip, 0)
+        times = np.delete(times, skip, 0)
+        with open(outfilename, 'w') as f:
+          for s, t, d in zip(steps, times, data):
+            f.write(str(s) + ' ' + t + '\n')
+            np.savetxt(f, d, fmt=' %s')
+        print("  --> {} written".format(outfilename))
+      except RuntimeError as e:
+        print('Error reading file.\n{} {}'.format(e.errno, e.strerror))
+    else:
+      print("  ! {} is empty.".format(filename))
+  
+  if read_file['.vel'] == True:
+    # VEL - velocities file
+    filename = prefix + '.vel'
+    print("* Fixing {} file...".format(filename))
+    outfilename = outprefix + '.vel'
+    if fstat(filename).st_size:  # if file is not empty
+      try:
+        data, steps, times = read_matrix_timeseries(filename, natoms)
+        skip = check_extra_steps(steps)
+        data = np.delete(data, skip, 0)
+        steps = np.delete(steps, skip, 0)
+        times = np.delete(times, skip, 0)
+        with open(outfilename, 'w') as f:
+          for s, t, d in zip(steps, times, data):
+            f.write(str(s) + ' ' + t + '\n')
+            np.savetxt(f, d, fmt=' %s')
+        print("  --> {} written".format(outfilename))
+      except RuntimeError as e:
+        print('Error reading file.\n{} {}'.format(e.errno, e.strerror))
+    else:
+      print(" {} is empty.".format(filename))
+
+  if read_file['.eig'] == True:
+    # EIG - eigenvalues file
+    filename = prefix + '.eig'
+    print("* Fixing {} file...".format(filename))
+    outfilename = outprefix + '.eig'
+    if fstat(filename).st_size:  # if file is not empty
+      try:
+        data, steps, times, comment = read_matrix_key_timeseries(filename, 'STEP:', 1)
+        skip = check_extra_steps(steps)
+        data = np.delete(data, skip, 0)
+        steps = np.delete(steps, skip, 0)
+        times = np.delete(times, skip, 0)
+        comment = np.delete(comment, skip, 0)
+        with open(outfilename, 'w') as f:
+          for s, t, c, d in zip(steps, times, comment, data):
+            f.write('  STEP:  ' + str(s) + ' ' + t + '\n')
+            f.write(c)
+            for dd in d:
+              f.write(dd)
+        print("  --> {} written".format(outfilename))
+      except RuntimeError as e:
+        print('Error reading file.\n{} {}'.format(e.errno, e.strerror))
+    else:
+      print(" {} is empty.".format(filename))
   
   return 0
 
