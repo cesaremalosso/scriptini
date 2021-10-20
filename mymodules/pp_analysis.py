@@ -58,7 +58,7 @@ def read_msd(filein,output,dt):
 def plot_msd(msd):
     f,ax = plt.subplots(1, figsize=(8.0,6.0), constrained_layout=True)
     ls=12
-    #
+
     ax.tick_params(axis='x', labelsize=ls)
     ax.tick_params(axis='y', labelsize=ls)
     col = ['red', 'blue']
