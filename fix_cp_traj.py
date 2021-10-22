@@ -31,7 +31,7 @@ def read_scalar_timeseries(filename):
     else:
        headline = []
   data = np.loadtxt(filename, dtype=str)
-  steps = np.array(map(int, data[:,0]))
+  steps = np.array(list(map(int, data[:,0])))
   return data, steps, headline
 
 def read_matrix_timeseries(filename, nrows):
