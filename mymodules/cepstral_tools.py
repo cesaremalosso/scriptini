@@ -3,6 +3,13 @@ import matplotlib.pyplot as plt
 import thermocepstrum as tc
 
 def k_fstar(nnjen, interval=range(1, 20, 2), corrfactors=np.arange(1, 3), plot = False):
+    """
+    :param nnjen: HeatCurrent object
+    :param interval: array with fstar you want to analyze
+    :param corrfactors: array of aic you want to use
+    :param plot: True if you want to directly plot your results
+    :return: jjjen, TSKIP_LIST
+    """
     jjjen = {}
     for cor in corrfactors:
         TSKIP_LIST = np.array([nnjen.Nyquist_f_THz / j for j in interval], dtype=int)
@@ -35,8 +42,6 @@ def plot_k(jjjen, nnjen, TSKIP_LIST, corrs=np.arange(1,3), title=None):
     ax.set_xlabel('F* (THz)', fontsize=ls)
     ax.set_ylabel(r'$\kappa$ (W/m/K)', fontsize=ls)
     ax.legend(loc='lower right', fontsize=ls, ncol=len(corrs))
-#    ax.set_ylim(0.003, 0.005)
-    #    return f,ax,FSTAR_LIST,kappa_Kmin,kappa_Kmin_err,Pstar_Kmin
     return
 
 
