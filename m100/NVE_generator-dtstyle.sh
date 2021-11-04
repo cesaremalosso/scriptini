@@ -6,6 +6,7 @@ function usage
    echo "         --last final run"
    echo "         -l number of step of the simulation"
    echo "         -m NN model"
+   echo "         -t time requested in hours"
    echo "         -h  --help      print this help"
    echo "Example:  NVE_generator.sh -t 500 --first 1 --last 10"
 }
@@ -15,6 +16,8 @@ while [ $# -gt 0 ]; do
         --first )         shift; run1=$1
                           ;;
         --last )         shift; run2=$1
+                          ;;
+        -t )              shift; timee=$1
                           ;;
         -l )              shift; length=$1
                           ;;
@@ -78,7 +81,7 @@ cat > slurm_simulation$i.pbs <<EOF
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem=230000MB
 #SBATCH --gpus-per-node=4
-#SBATCH --time=24:00:00
+#SBATCH --time=$timee:00:00
 #SBATCH --account=Sis21_baroni_0
 #SBATCH --partition=m100_usr_prod
 #SBATCH --job-name=NVE-$i
@@ -146,7 +149,7 @@ cat > slurm_simulation$i.pbs <<EOF
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem=230000MB
 #SBATCH --gpus-per-node=4
-#SBATCH --time=24:00:00
+#SBATCH --time=$timee:00:00
 #SBATCH --account=Sis21_baroni_0
 #SBATCH --partition=m100_usr_prod
 #SBATCH --job-name=NVE-$i
