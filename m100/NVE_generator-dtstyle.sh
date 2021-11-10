@@ -171,7 +171,7 @@ echo \$SLURM_SUBMIT_DIR
 NNODES=$nodes
 NPROCS=\$((NNODES*4))
 
-mpirun -np 4 /m100/home/userexternal/dtisi000/deepmd-1.3.3/lammps29Oct2020_dtisi/src/lmp_mpi < NVElammps$i.in > NVElammps$i.out
+mpirun -np \${NPROCS} /m100/home/userexternal/dtisi000/deepmd-1.3.3/lammps29Oct2020_dtisi/src/lmp_mpi < NVElammps$i.in > NVElammps$i.out
 EOF
 done
 fi
