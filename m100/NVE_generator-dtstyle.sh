@@ -7,8 +7,9 @@ function usage
    echo "         -l number of step of the simulation"
    echo "         -m NN model"
    echo "         -t time requested in hours"
+   echo "         --nodes number of nodes"
    echo "         -h  --help      print this help"
-   echo "Example:  NVE_generator.sh -t 500 --first 1 --last 10"
+   echo "Example:  NVE_generator.sh  --first 1 --last 10 -l 500000 -m ../frozen_model.pb --nodes 2 -t 5 "
 }
 run2=0
 while [ $# -gt 0 ]; do
@@ -20,6 +21,8 @@ while [ $# -gt 0 ]; do
         -t )              shift; timee=$1
                           ;;
         -l )              shift; length=$1
+                          ;;
+        --nodes )         shift; nodes=$1
                           ;;
         -m )              shift; model=$1
                           ;;
@@ -77,7 +80,7 @@ EOF
 
 cat > slurm_simulation$i.pbs <<EOF
 #!/bin/bash
-#SBATCH --nodes=1
+#SBATCH --nodes=$nodes
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem=230000MB
 #SBATCH --gpus-per-node=4
@@ -94,7 +97,10 @@ source /m100/home/userexternal/dtisi000/deepmd-1.3.3/moduli_lammps.sh
 cd \${SLURM_SUBMIT_DIR}
 echo \$SLURM_SUBMIT_DIR
 
-mpirun -np 4 /m100/home/userexternal/dtisi000/deepmd-1.3.3/lammps29Oct2020_dtisi/src/lmp_mpi < NVElammps$i.in > NVElammps$i.out  
+NNODES=$nodes
+NPROCS=\$((NNODES*4))
+
+mpirun -np \${NPROCS} /m100/home/userexternal/dtisi000/deepmd-1.3.3/lammps29Oct2020_dtisi/src/lmp_mpi < NVElammps$i.in > NVElammps$i.out
 EOF
 
 done
@@ -145,7 +151,7 @@ write_data final$i.data
 EOF
 cat > slurm_simulation$i.pbs <<EOF
 #!/bin/bash
-#SBATCH --nodes=1
+#SBATCH --nodes=$nodes
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem=230000MB
 #SBATCH --gpus-per-node=4
@@ -162,7 +168,10 @@ source /m100/home/userexternal/dtisi000/deepmd-1.3.3/moduli_lammps.sh
 cd \${SLURM_SUBMIT_DIR}
 echo \$SLURM_SUBMIT_DIR
 
-mpirun -np 4 /m100/home/userexternal/dtisi000/deepmd-1.3.3/lammps29Oct2020_dtisi/src/lmp_mpi < NVElammps$i.in > NVElammps$i.out  
+NNODES=$nodes
+NPROCS=\$((NNODES*4))
+
+mpirun -np 4 /m100/home/userexternal/dtisi000/deepmd-1.3.3/lammps29Oct2020_dtisi/src/lmp_mpi < NVElammps$i.in > NVElammps$i.out
 EOF
 done
 fi
