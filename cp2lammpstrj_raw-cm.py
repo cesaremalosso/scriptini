@@ -268,7 +268,7 @@ def write_xyz(outfile, data, natoms_per_type, type_names=None, type_array=None, 
 			out_force_raw.truncate(0)
 		out_energy_raw = open('energy.raw', 'w')
 		if 'str' in data:
-			out_virial_raw = open('virial.raw', 'ba')
+			out_virial_raw = open('stress.raw', 'ba')
 			out_virial_raw.truncate(0)
 		if 'vel' in data:
 			out_vel_raw = open('vel.raw','ba')
