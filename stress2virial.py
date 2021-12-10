@@ -3,9 +3,9 @@
 
 import numpy as np
 import argparse
-mass = {}
-mass[1] = 1
-mass[2] = 16
+mass = [1,16]
+#mass[1] = 1
+#mass[2] = 16
 vol = 12.425508894894122**3
 natom = 192
 eV = 6.24150974#e18 #J2eV
@@ -23,13 +23,12 @@ with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('t
     vel = np.reshape(values, (natom, 3))
 
     linetyp = filetyp.readline()
-    typ = np.array(linetyp.split(), dtype=int)
+    typ = np.array(linetyp.split())#, dtype=int)
 
     kin = np.zeros((3,3))
     for iatom, tatom in enumerate(typ):
-        print(mass[tatom])
-        print(np.outer(vel[iatom], vel[iatom]) * mass[tatom])
-        kin += np.outer(vel[iatom], vel[iatom]) * mass[tatom] / NA * eV * 1e-4
+        print(np.outer(vel[iatom], vel[iatom]) * mass[tatom-1])
+        kin += np.outer(vel[iatom], vel[iatom]) * mass[tatom-1] / NA * eV * 1e-4
 
     virial = stress - kin
 
