@@ -58,7 +58,7 @@ def block_analysis(jen, temp, tmax, dt, vol, fstar, corrs=np.arange(1, 3), u='me
             init = Nstep * ij
             end = Nstep * (ij + 1) if Nstep * (ij + 1) < jen.shape[0] else jen.shape[0]
 
-            tmean = np.mean(temp[init:end]) / 374 * 375
+            tmean = np.mean(temp[init:end])
             t.append(tmean)
 
             jj = tc.HeatCurrent(j=jen[init:end], DT_FS=dt, TEMPERATURE=tmean, units=u, VOLUME=vol, PSD_FILTER_W=0.3)
