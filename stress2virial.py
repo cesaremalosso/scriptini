@@ -16,8 +16,8 @@ with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('t
     linestr = filestr.readline()
     # convert from bar to eV
     values = np.array(linestr.split())
-    stress = np.reshape(values, (3, 3))* vol * eV * 1e-7
-
+    stress = np.reshape(values, (3, 3))#* vol * eV * 1e-7
+    print(stress)
     linevel = filevel.readline()
     values = np.array(linevel.split())
     vel = np.reshape(values, (natom, 3))
