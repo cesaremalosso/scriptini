@@ -15,7 +15,7 @@ with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('t
 
     linestr = filestr.readline()
     # convert from bar to eV
-    values = np.array(linestr.split())
+    values = np.array(linestr.split(), dtype=float)
     stress = np.reshape(values, (3, 3))#* vol * eV * 1e-7
     print(stress)
     linevel = filevel.readline()
@@ -23,7 +23,7 @@ with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('t
     vel = np.reshape(values, (natom, 3))
 
     linetyp = filetyp.readline()
-    typ = np.array(linetyp.split(), fmt=int)
+    typ = np.array(linetyp.split(), dtype=int)
 
     kin = np.zeros((3,3))
     for tatom, iatom in enumerate(typ):
