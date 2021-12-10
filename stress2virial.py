@@ -10,7 +10,7 @@ vol = 12.425508894894122**3
 natom = 192
 eV = 6.24150974#e18 #J2eV
 NA = 6.02214076#e23
-out_virial_raw = 'virial.raw'
+out_virial_raw = open('virial.raw','w')
 with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('type.raw', 'r') as filetyp:
 
     linestr = filestr.readline()
@@ -27,10 +27,10 @@ with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('t
 
     kin = np.zeros((3,3))
     for iatom, tatom in enumerate(typ):
-        print(np.outer(vel[iatom], vel[iatom]) * mass[tatom-1])
-        kin += np.outer(vel[iatom], vel[iatom]) * mass[tatom-1] / NA * eV * 1e-4
+        kin += np.outer(vel[iatom], vel[iatom]) * mass[tatom] / NA * eV * 1e-4
 
     virial = stress - kin
 
     np.savetxt(out_virial_raw, np.reshape(virial, 9), newline=" ")
     out_virial_raw.write('\n'.encode("utf-8"))
+out_virial_raw.close()
