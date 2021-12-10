@@ -19,8 +19,9 @@ with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('t
     stress = np.reshape(values, (3, 3))
 
     linevel = filevel.readline()
-    values = np.array(linevel.split(), dtype = float)
+    values = np.array(linevel.split(), dtype =float)
     vel = np.reshape(values, (natom, 3))
+    print(vel)
 
     linetyp = filetyp.readline()
     typ = np.array(linetyp.split(), dtype=int)
