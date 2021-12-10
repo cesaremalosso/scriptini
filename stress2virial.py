@@ -3,6 +3,12 @@
 
 import numpy as np
 import argparse
+import warnings
+from subprocess import check_output
+import re
+
+
+
 mass = [1,16]
 #mass[1] = 1
 #mass[2] = 16
@@ -32,5 +38,5 @@ with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('t
     virial = stress - kin
 
     np.savetxt(out_virial_raw, np.reshape(virial, 9), newline=" ")
-    out_virial_raw.write('\n'.encode("utf-8"))
+    out_virial_raw.write("\n".encode("utf-8"))
 out_virial_raw.close()
