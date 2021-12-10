@@ -38,5 +38,5 @@ with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('t
     virial = stress - kin
 
     np.savetxt(out_virial_raw, np.reshape(virial, 9), newline=" ")
-    out_virial_raw.write("\n".encode("utf-8"))
+    out_virial_raw.write('\n')
 out_virial_raw.close()
