@@ -21,13 +21,12 @@ with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('t
     linevel = filevel.readline()
     values = np.array(linevel.split(), dtype =float)
     vel = np.reshape(values, (natom, 3))
-    print(vel)
 
     linetyp = filetyp.readline()
     typ = np.array(linetyp.split(), dtype=int)
 
     kin = np.zeros((3,3))
-    for tatom, iatom in enumerate(typ):
+    for iatom, tatom in enumerate(typ):
         kin += np.outer(vel[iatom], vel[iatom]) * mass[tatom] / NA * eV * 1e-4
 
     virial = stress - kin
