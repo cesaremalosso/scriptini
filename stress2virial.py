@@ -35,7 +35,7 @@ with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('t
     for iatom, tatom in enumerate(typ):
         kin += np.outer(vel[iatom], vel[iatom]) * mass[tatom] / NA * eV * 1e-4
 
-    virial = stress - kin
+    virial = stress + kin
 
     np.savetxt(out_virial_raw, np.reshape(virial, 9), newline=" ")
     out_virial_raw.write('\n')
