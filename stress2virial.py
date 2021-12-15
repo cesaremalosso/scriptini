@@ -20,11 +20,10 @@ out_virial_raw = open('virial.raw','w')
 
 typ = np.loadtxt('type.raw', dtype=int)
 with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel:
-    for line, iline in enumerate(filestr):
-        print(iline)
-        linestr = filestr.readline()
+    for iline, line in enumerate(filestr):
+        # linestr = filestr.readline()
         # convert from bar to eV
-        values = np.array(linestr.split(), dtype=float) * vol * eV * 1e-7
+        values = np.array(line.split(), dtype=float) * vol * eV * 1e-7
         stress = np.reshape(values, (3, 3))
 
         linevel = filevel.readline()
