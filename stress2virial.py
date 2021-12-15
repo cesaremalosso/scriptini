@@ -17,7 +17,9 @@ natom = 192
 eV = 6.24150974#e18 #J2eV
 NA = 6.02214076#e23
 out_virial_raw = open('virial.raw','w')
-with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('type.raw', 'r') as filetyp:
+
+typ = np.loadtxt('type.raw', dtype=int)
+with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel:
     for line in filestr:
         linestr = filestr.readline()
         # convert from bar to eV
@@ -27,9 +29,6 @@ with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel, open('t
         linevel = filevel.readline()
         values = np.array(linevel.split(), dtype =float)
         vel = np.reshape(values, (natom, 3))
-
-        linetyp = filetyp.readline()
-        typ = np.array(linetyp.split(), dtype=int)
 
         kin = np.zeros((3,3))
         for iatom, tatom in enumerate(typ):
