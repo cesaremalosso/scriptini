@@ -33,7 +33,6 @@ with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel:
         kin = np.zeros((3,3))
         for iatom, tatom in enumerate(typ):
             kin += np.outer(vel[iatom], vel[iatom]) * mass[tatom] / NA * eV * 1e-4
-            print(kin)
 
         virial = stress - kin
 
