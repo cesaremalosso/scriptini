@@ -20,7 +20,8 @@ out_virial_raw = open('virial.raw','w')
 
 typ = np.loadtxt('type.raw', dtype=int)
 with open('stress.raw','r') as filestr, open('vel.raw', 'r') as filevel:
-    for line in filestr:
+    for line, iline in enumerate(filestr):
+        print(iline)
         linestr = filestr.readline()
         # convert from bar to eV
         values = np.array(linestr.split(), dtype=float) * vol * eV * 1e-7
