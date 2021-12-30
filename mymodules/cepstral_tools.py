@@ -103,7 +103,7 @@ def block_analysis_pstar(jen, temp, tmax, dt, vol, fstar, corrs=np.arange(1, 3),
 
             vis[cor][ij] = rj.kappa_Kmin * 100
             vis_std[cor][ij] = rj.kappa_Kmin_std * 100
-            pstar = rj.dct.aic_Kmin + 1
+            pstar[cor][ij] = rj.dct.aic_Kmin + 1
         mean[i] = np.mean(vis[cor])
         std[i] = np.std(vis[cor])
         mean_std[i] = np.mean(vis_std[cor])
