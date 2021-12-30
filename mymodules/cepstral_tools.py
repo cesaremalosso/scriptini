@@ -72,3 +72,40 @@ def block_analysis(jen, temp, tmax, dt, vol, fstar, corrs=np.arange(1, 3), u='me
         mean_std[i] = np.mean(vis_std[cor])
         i += 1
     return vis, vis_std
+def block_analysis_pstar(jen, temp, tmax, dt, vol, fstar, corrs=np.arange(1, 3), u='metal_vis'):
+    mean = np.zeros(np.size(corrs))
+    std = np.zeros(np.size(corrs))
+    mean_std = np.zeros(np.size(corrs))
+
+    i = 0
+    vis = {}
+    vis_std = {}
+    pstar = {}
+    for cor in corrs:
+
+        Nstep = int(np.rint(tmax / (dt * 1e-3)))
+        maxrows = np.size(jen, 0)
+        Ncurrs = maxrows // Nstep
+        vis[cor] = np.zeros(Ncurrs)
+        vis_std[cor] = np.zeros(Ncurrs)
+        pstar[cor] = np.zeros(Ncurrs)
+        t = []
+        for ij in range(Ncurrs):
+            init = Nstep * ij
+            end = Nstep * (ij + 1) if Nstep * (ij + 1) < jen.shape[0] else jen.shape[0]
+
+            tmean = np.mean(temp[init:end])
+            t.append(tmean)
+
+            jj = tc.HeatCurrent(j=jen[init:end], DT_FS=dt, TEMPERATURE=tmean, units=u, VOLUME=vol, PSD_FILTER_W=0.3)
+            rj = jj.resample_current(fstar_THz=fstar, plot=False, PSD_FILTER_W=0.10)
+            rj.cepstral_analysis(Kmin_corrfactor=cor)
+
+            vis[cor][ij] = rj.kappa_Kmin * 100
+            vis_std[cor][ij] = rj.kappa_Kmin_std * 100
+            pstar = rj.dct.aic_Kmin + 1
+        mean[i] = np.mean(vis[cor])
+        std[i] = np.std(vis[cor])
+        mean_std[i] = np.mean(vis_std[cor])
+        i += 1
+    return vis, vis_std,
