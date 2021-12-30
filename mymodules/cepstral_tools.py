@@ -108,4 +108,4 @@ def block_analysis_pstar(jen, temp, tmax, dt, vol, fstar, corrs=np.arange(1, 3),
         std[i] = np.std(vis[cor])
         mean_std[i] = np.mean(vis_std[cor])
         i += 1
-    return vis, vis_std,
+    return vis, vis_std, pstar
