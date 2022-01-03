@@ -4,7 +4,7 @@
 #SBATCH --mem=230000MB                                                        
 #SBATCH --gpus-per-node=4                                                          
 #SBATCH --time=00:30:00                                                       
-#SBATCH --account=Sis21_baroni_0                                              
+#SBATCH --account=Sis22_baroni_0
 #SBATCH --partition=m100_usr_prod                                             
 #SBATCH --job-name=NVT-$i                                                     
 #SBATCH --mail-user=cmalosso@sissa.it                                         

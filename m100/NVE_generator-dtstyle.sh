@@ -85,7 +85,7 @@ cat > slurm_simulation$i.pbs <<EOF
 #SBATCH --mem=230000MB
 #SBATCH --gpus-per-node=4
 #SBATCH --time=$timee:00:00
-#SBATCH --account=Sis21_baroni_0
+#SBATCH --account=Sis22_baroni_0
 #SBATCH --partition=m100_usr_prod
 #SBATCH --job-name=NVE-$i
 #SBATCH --mail-user=cmalosso@sissa.it
@@ -156,7 +156,7 @@ cat > slurm_simulation$i.pbs <<EOF
 #SBATCH --mem=230000MB
 #SBATCH --gpus-per-node=4
 #SBATCH --time=$timee:00:00
-#SBATCH --account=Sis21_baroni_0
+#SBATCH --account=Sis22_baroni_0
 #SBATCH --partition=m100_usr_prod
 #SBATCH --job-name=NVE-$i
 #SBATCH --mail-user=cmalosso@sissa.it
