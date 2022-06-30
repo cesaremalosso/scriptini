@@ -78,7 +78,7 @@ def read_pw(infile,logfile='log.log'):
                stress[i,2] = ll[2]
            dd=False
        else: 
-         if(step>=3000):
+         if(step>=8000):
            fff = open('errore','w+')
            fff.write('error  in pw')
            fff.close()
