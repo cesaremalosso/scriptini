@@ -51,4 +51,4 @@ class Descriptor:
     def compute_nn(self, dist):
         dist = np.linalg.norm(dist, axis = 1)
         ord = dist.argsort()
-        return dist[ord[:]] , ord[:]
+        return dist[ord[:]], ord[:]
