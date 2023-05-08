@@ -1,6 +1,7 @@
 import numpy as np
-import scipy.special as sp
-
+import scipy
+from scipy.constants import k as kb
+from scipy.constants import N_A
 
 class Descriptor:
 
@@ -52,3 +53,24 @@ class Descriptor:
         dist = np.linalg.norm(dist, axis = 1)
         ord = dist.argsort()
         return dist[ord[:]], ord[:]
+
+
+def t_orderparameter(x, gdr, natoms, xi_c, vol):
+    r_c = xi_c / (natoms / vol) ** (1 / 3)
+
+    if r_c > x[-1]:
+        raise Exception('r_c = {}: upper limit of integration bigger than {}'.format(r_c, x[-1]))
+    for i, j in enumerate(x):
+        if j > r_c :
+            istop = i
+            break
+
+    t = scipy.integrate.trapezoid(np.abs(gdr[:istop] - 1) / r_c, x=x[:istop])
+    return t
+
+
+def s2_structuralentropy(x, gdr, rho):
+    integrand = -2 * np.pi * rho * kb * N_A * (np.log(gdr ** gdr) - gdr + 1) * x ** 2
+    s2 = scipy.integrate.trapezoid(integrand, x=x)
+
+    return s2, integrand
