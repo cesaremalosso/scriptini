@@ -4,7 +4,7 @@ from scipy.constants import k as kb
 from scipy.constants import N_A
 from numba import jit, prange
 
-@jit(parallel=True)
+@jit(nopython=True,parallel=True)
 def compute_q(coord, box, iatom):
 
     dist = coord - coord[iatom]
@@ -22,15 +22,15 @@ def compute_q(coord, box, iatom):
     nn_matrixdiff = dist[nn_list]
 
     # take just the first four nearest neighbour
-    q = 0
+    q = np.zeros((3,4))
     for i in prange(3):
         for j in prange(i+1,4):
             dot_prod = np.dot(nn_matrixdiff[i+1], nn_matrixdiff[j+1])
             i_norm = np.linalg.norm(nn_matrixdiff[i+1])
             j_norm = np.linalg.norm(nn_matrixdiff[j+1])
             cosphi = dot_prod/i_norm/j_norm
-            q += (cosphi + 1/3)**2
-    q = 1 - 3/8*q
+            q[i,j] = (cosphi + 1/3)**2
+    q = 1 - 3/8*np.sum(q)
     return q
 
 def apply_pbc(box, dist):
