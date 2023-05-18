@@ -8,7 +8,10 @@ from numba import jit, prange
 def compute_q(coord, box, iatom):
 
     dist = coord - coord[iatom]
-    dist = apply_pbc(box, dist)
+    # applying pbc
+    box = np.tile(box, (np.shape(dist)[0],1))
+    dist -= np.rint(dist/box) * box
+    # dist = apply_pbc(box, dist)
     # array with the distances of the neighbours in order and list of neighbours in order
     nn_dist, nn_list = compute_nn(dist)
     # array with all the relative positions of the neighbours with respect to atom iatom
