@@ -4,7 +4,7 @@ from scipy.constants import k as kb
 from scipy.constants import N_A
 from numba import jit, prange
 
-@jit(nopython=True, parallel=True)
+@jit(nopython=False, parallel=True)
 def compute_q(coord, box, iatom):
 
     dist = coord - coord[iatom]
