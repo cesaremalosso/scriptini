@@ -15,7 +15,7 @@ def compute_q(coord, box, iatom):
     # dist = apply_pbc(box, dist)
     # array with the distances of the neighbours in order and list of neighbours in order
     distt = np.zeros(dist.shape[0])
-    for i in range(distt.shape[0]):
+    for i in prange(distt.shape[0]):
         distt[i] = np.linalg.norm(dist[i])
     # distt = np.linalg.norm(dist, axis = 1)
     nn_list = distt.argsort()
