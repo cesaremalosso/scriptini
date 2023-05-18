@@ -13,7 +13,11 @@ def compute_q(coord, box, iatom):
     dist -= np.rint(dist/box) * box
     # dist = apply_pbc(box, dist)
     # array with the distances of the neighbours in order and list of neighbours in order
-    nn_dist, nn_list = compute_nn(dist)
+    distt = np.linalg.norm(dist, axis = 1)
+    nn_list = distt.argsort()
+    nn_dist = dist[nn_list[:]]
+
+    # ord, nn_list = compute_nn(dist)
     # array with all the relative positions of the neighbours with respect to atom iatom
     nn_matrixdiff = dist[nn_list]
 
