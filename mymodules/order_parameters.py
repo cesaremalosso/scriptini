@@ -9,7 +9,8 @@ def compute_q(coord, box, iatom):
 
     dist = coord - coord[iatom]
     # applying pbc
-    box = np.tile(box, (np.shape(dist)[0],1))
+    box = box.repeat(coord.shape[0]).reshape(coord.shape[0], coord.shape[1])
+#    box = np.tile(box, (np.shape(dist)[0],1))
     dist -= np.rint(dist/box) * box
     # dist = apply_pbc(box, dist)
     # array with the distances of the neighbours in order and list of neighbours in order
