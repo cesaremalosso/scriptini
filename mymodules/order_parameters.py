@@ -26,13 +26,11 @@ def compute_q(coord, box, iatom):
     q = 1 - 3/8*q
     return q
 
-@jit(nopython=True)
 def apply_pbc(box, dist):
     box = np.tile(box,(np.shape(dist)[0],1))
     dist -= np.rint(dist/box) * box
     return dist
 
-@jit(nopython=True)
 def compute_nn(dist):
     dist = np.linalg.norm(dist, axis = 1)
     ord = dist.argsort()
