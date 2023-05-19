@@ -4,18 +4,16 @@ from scipy.constants import k as kb
 from scipy.constants import N_A
 from numba import jit, prange
 
-@jit(nopython=True,parallel=True)
+@jit(nopython=True,parallel=False)
 def compute_q(coord, box, iatom):
 
     dist = coord - coord[iatom]
     # applying pbc
     box = box.repeat(coord.shape[0]).reshape(coord.shape[0], coord.shape[1])
-#    box = np.tile(box, (np.shape(dist)[0],1))
     dist -= np.rint(dist/box) * box
-    # dist = apply_pbc(box, dist)
     # array with the distances of the neighbours in order and list of neighbours in order
     distt = np.zeros(dist.shape[0])
-    for i in prange(distt.shape[0]):
+    for i in range(distt.shape[0]):
         distt[i] = np.linalg.norm(dist[i])
     # distt = np.linalg.norm(dist, axis = 1)
     nn_list = distt.argsort()
@@ -27,8 +25,8 @@ def compute_q(coord, box, iatom):
 
     # take just the first four nearest neighbour
     q = np.zeros((3,4))
-    for i in prange(3):
-        for j in prange(i+1,4):
+    for i in range(3):
+        for j in range(i+1,4):
             dot_prod = np.dot(nn_matrixdiff[i+1], nn_matrixdiff[j+1])
             i_norm = np.linalg.norm(nn_matrixdiff[i+1])
             j_norm = np.linalg.norm(nn_matrixdiff[j+1])
